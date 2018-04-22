@@ -154,13 +154,20 @@ class EGPlugin {
 		if (!err) {
 			functions = result;
 		}
-		return functions.filter(f =>
-			f.functionId.startsWith(
-				`${
-					this.serverless.service.service
-				}-${this.awsProvider.getStage()}`
-			)
+
+		this.serverless.cli.consoleLog(
+			`Finding registered funtions starting with ${this.awsProvider.getRegion()}-${
+				this.serverless.service.service
+			}`
 		);
+
+		return functions.filter(f => {
+			return f.functionId.startsWith(
+				`${this.awsProvider.getStage()}-${
+					this.serverless.service.service
+				}`
+			);
+		});
 	}
 
 	async getEGServiceSubscriptions() {
@@ -172,11 +179,18 @@ class EGPlugin {
 		if (!err) {
 			subscriptions = result;
 		}
+
+		this.serverless.cli.consoleLog(
+			`Finding registered subscriptions starting with ${this.awsProvider.getRegion()}-${
+				this.serverless.service.service
+			}`
+		);
+
 		return subscriptions.filter(s =>
 			s.functionId.startsWith(
-				`${
+				`${this.awsProvider.getRegion()}-${
 					this.serverless.service.service
-				}-${this.awsProvider.getStage()}`
+				}`
 			)
 		);
 	}
@@ -413,7 +427,15 @@ class EGPlugin {
 				.split(':')
 				.slice(0, 7)
 				.join(':');
-			const functionId = fullArn.split(':')[6];
+
+			const functionId = `${this.awsProvider.getRegion()}-${
+				fullArn.split(':')[6]
+			}`.trim();
+
+			this.serverless.cli.consoleLog(
+				`EventGateway: Function registering under function id ${functionId}`
+			);
+
 			const fn = {
 				functionId: functionId,
 				type: 'awslambda',
