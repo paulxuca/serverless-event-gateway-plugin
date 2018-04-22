@@ -156,14 +156,14 @@ class EGPlugin {
 		}
 
 		this.serverless.cli.consoleLog(
-			`Finding registered funtions starting with ${this.awsProvider.getRegion()}-${
+			`Finding registered functions starting with ${this.awsProvider.getRegion()}-${
 				this.serverless.service.service
 			}`
 		);
 
 		return functions.filter(f => {
 			return f.functionId.startsWith(
-				`${this.awsProvider.getStage()}-${
+				`${this.awsProvider.getRegion()}-${
 					this.serverless.service.service
 				}`
 			);
@@ -470,13 +470,12 @@ class EGPlugin {
 						event.eventgateway
 					);
 					this.serverless.cli.consoleLog(
-						`EventGateway: Function "${name}" subscribed to "${
-							event.eventgateway.event
-						}" event.`
+						`EventGateway: Function "${name}" subscribed to invoke event.`
 					);
 				});
 			} else {
 				// remove function from functions array
+				// This will prevent this function from being deregistered.
 				registeredFunctions = registeredFunctions.filter(
 					f => f.functionId !== functionId
 				);
