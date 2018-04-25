@@ -825,7 +825,8 @@ class EGPlugin {
     const subscribeEvent = {
       // Changed from event: 'http' since I'll ensure that function-ids are unique.
       functionId,
-      event: "invoke"
+      event: "invoke",
+      path: eventPath(event, config.space)
     };
 
     if (event.event === "http") {
