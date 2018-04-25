@@ -418,10 +418,6 @@ class EGPlugin {
         fullArn.split(":")[6]
       }`.trim();
 
-      this.serverless.cli.consoleLog(
-        `EventGateway: Function registering under function id ${functionId}`
-      );
-
       const fn = {
         functionId: functionId,
         type: "awslambda",
@@ -442,6 +438,10 @@ class EGPlugin {
       );
 
       if (!registeredFunction) {
+        this.serverless.cli.consoleLog(
+          `EventGateway: Function registering under function id ${functionId}`
+        );
+
         // create function if doesn't exit
         await this.registerFunction(fn);
         this.serverless.cli.consoleLog(
@@ -476,6 +476,18 @@ class EGPlugin {
 
           // create subscription as it doesn't exists
           if (!existingSubscription) {
+            this.serverless.cli.consoleLog(
+              `EventGateway (debug): ${functionId} registering new subscription`
+            );
+
+            this.serverless.cli.consoleLog(
+              `EventGateway (debug): Existing subscriptions ${JSON.stringify(
+                existingSubscriptions,
+                null,
+                2
+              )}`
+            );
+
             await this.createSubscription(config, functionId, event);
             this.serverless.cli.consoleLog(
               `EventGateway: Function "${name}" subscribed to "${
