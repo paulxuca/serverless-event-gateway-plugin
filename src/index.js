@@ -470,7 +470,6 @@ class EGPlugin {
           const existingSubscription = existingSubscriptions.find(
             s =>
               s.event === event.event &&
-              s.method === event.method &&
               s.path === eventPath(event, config.space)
           );
 
