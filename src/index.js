@@ -467,11 +467,29 @@ class EGPlugin {
         );
         functionEvents.forEach(async event => {
           event = event.eventgateway;
-          const existingSubscription = existingSubscriptions.find(
-            s =>
+          this.serverless.cli.consoleLog(
+            `EventGateway (debug): Finding subscription from event: ${JSON.stringify(
+              event,
+              null,
+              2
+            )}`
+          );
+
+          const existingSubscription = existingSubscriptions.find(s => {
+            // console.log(s)
+            this.serverless.cli.consoleLog(
+              `EventGateway (debug): Existing subscription: ${JSON.stringify(
+                s,
+                null,
+                2
+              )}`
+            );
+
+            return (
               s.event === event.event &&
               s.path === eventPath(event, config.space)
-          );
+            );
+          });
 
           // create subscription as it doesn't exists
           if (!existingSubscription) {
