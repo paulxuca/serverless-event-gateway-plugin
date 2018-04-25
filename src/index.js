@@ -485,10 +485,7 @@ class EGPlugin {
               )}`
             );
 
-            return (
-              s.event === event.event &&
-              s.path === eventPath(event, config.space)
-            );
+            return s.event === event.event && s.functionId === functionId;
           });
 
           // create subscription as it doesn't exists
@@ -825,8 +822,7 @@ class EGPlugin {
     const subscribeEvent = {
       // Changed from event: 'http' since I'll ensure that function-ids are unique.
       functionId,
-      event: "invoke",
-      path: eventPath(event, config.space)
+      event: "invoke"
     };
 
     if (event.event === "http") {
